@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - user-service
+      - post-service
+      - community-service
+
+  user-service:
+    build: ./user-service
+    depends_on:
+      - db
+
+  post-service:
+    build: ./post-service
+    depends_on:
+      - db
+
+  community-service:
+    build: ./community-service
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: healthcare_social_media
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
